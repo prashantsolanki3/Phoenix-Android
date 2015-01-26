@@ -1,0 +1,43 @@
+<resources>
+    <!--Customize here the subject of your application-->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
+<style name="AppTheme.Blue" parent="AppTheme">
+    <!-- Customize your theme here. -->
+    <item name="colorPrimary">@color/nliveo_blue_colorPrimary</item>
+    <item name="colorPrimaryDark">@color/nliveo_blue_colorPrimaryDark</item>
+    <item name="colorAccent">@color/nliveo_blue_colorPrimary</item>
+</style>
+    <style name="AppTheme.NoActionBar.Blue" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="android:windowActionBar">false</item>
+        <item name="colorPrimary">@color/nliveo_blue_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/nliveo_blue_colorPrimaryDark</item>
+        <item name="colorAccent">@color/nliveo_blue_colorPrimary</item>
+    </style>
+
+    <!--Here will be the theme of the class that will extends NavigationLiveo-->
+    <style name="DrawerActivity" parent="nLiveo.Theme.DarkActionBar"/>
+
+    <style name="DrawerActivity.Blue" parent="DrawerActivity">
+        <!-- Customize your theme here. -->
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="colorPrimary">@color/nliveo_blue_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/nliveo_blue_alpha_colorPrimaryDark</item>
+        <item name="colorAccent">@color/pink</item>
+    </style>
+
+
+    <!--Fading Action Bar-->
+    <style name="TranslucentToolbar" parent="Theme.AppCompat.Light">
+
+            <item name="windowActionBar">false</item>
+            <item name="android:fitsSystemWindows">true</item>
+            <!--<item name="android:windowTranslucentStatus">true</item>-->
+            <item name="colorPrimary">@color/nliveo_blue_colorPrimary</item>
+            <item name="colorPrimaryDark">@color/nliveo_blue_colorPrimaryDark</item>
+            <item name="colorAccent">@color/nliveo_blue_colorPrimary</item>
+
+
+    </style>
+
+</resources>

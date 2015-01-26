@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name" translatable="false">phoenix-lib</string>
+    <string name="get_recent_id">recent</string>
+</resources>

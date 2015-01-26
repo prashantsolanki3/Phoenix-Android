@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceScreen
+        android:title="Blog Settings">
+
+        <!-- You can place more preferences here that will be shown on the next screen. -->
+        <PreferenceCategory android:title="Configuration" >
+            <EditTextPreference
+                android:key="website_url"
+                android:title="Blog URL"
+                android:summary="Enter URL of your WP Blog">
+            </EditTextPreference>
+            <EditTextPreference
+                android:key="api_endpoint"
+                android:title="API ENDPOINT"
+                android:summary="example.com/">
+            </EditTextPreference>
+        </PreferenceCategory>
+    </PreferenceScreen>
+
+</PreferenceScreen>

@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+
+android {
+    signingConfigs {
+    }
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+    defaultConfig {
+        applicationId "com.quasar_productions.phoenix"
+        minSdkVersion 14
+        targetSdkVersion 21
+        versionCode 2
+        versionName '20150126'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    wearApp project(':wear')
+    compile 'com.android.support:appcompat-v7:21.0.3+'
+    //Appcompat
+    compile 'com.google.android.gms:play-services:6.5.87+'
+    // Play Services
+    compile 'br.com.liveo:navigationdrawer-material:1.2.0+'
+    //Navigation Drawer Library
+    compile 'de.greenrobot:eventbus:2.4.0+'
+    // EventBus
+    compile project(':phoenix-lib')
+    //Phoenix Wordpress Library
+    compile 'com.squareup.picasso:picasso:2.4.0+'
+    //Picasso Image Library
+    compile 'org.lucasr.twowayview:core:1.0.0-SNAPSHOT@aar'
+    // For Core TwowayView Functionality
+    compile 'org.lucasr.twowayview:layouts:1.0.0-SNAPSHOT@aar'
+    // For Additional Layouts
+    compile 'com.android.support:recyclerview-v7:21.0.3+'
+    // RecyclerView provided by Android
+    compile 'com.avast:android-styled-dialogs:2.0.1+'
+    //Material Dialog Library
+    compile 'com.android.support:palette-v7:21.0.3+'
+    //Palette Support Library
+    compile 'com.android.support:cardview-v7:21.0.3+'
+    //Card View Library
+    compile 'com.pnikosis:materialish-progress:1.4+'
+    //Progress Wheel
+    compile 'com.github.manuelpeinado.fadingactionbar:fadingactionbar:3.1.2+'
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.4+'
+    //Fading Action Bar and systembartint (Required for FAB with toolbar).
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.easing:library:1.0.1@aar'
+    compile 'com.daimajia.androidanimations:library:1.1.3@aar'
+    //Animations
+    compile 'com.getbase:floatingactionbutton:1.6.0'
+    //Floating Buttons
+    compile 'de.greenrobot:greendao:1.3.7'
+    compile 'de.greenrobot:greendao-generator:1.3.1'
+
+}

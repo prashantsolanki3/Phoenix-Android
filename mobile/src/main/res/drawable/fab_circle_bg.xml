@@ -1,0 +1,51 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Drop Shadow Stack -->
+    <item>
+        <shape android:shape="oval" >
+            <padding android:top="0.5dp" android:right="1dp" android:bottom="1dp" android:left="0.5dp" />
+            <solid android:color="#05AAAAAA" />
+            <corners android:radius="5dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <padding android:top="0.5dp" android:right="1dp" android:bottom="1dp" android:left="0.5dp" />
+            <solid android:color="#10AAAAAA" />
+            <corners android:radius="5dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#20AAAAAA" />
+            <padding android:top="0.5dp" android:right="1dp" android:bottom="1dp" android:left="0.5dp" />
+            <corners android:radius="5dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <padding android:top="0.5dp" android:right="1dp" android:bottom="1dp" android:left="0.5dp" />
+            <solid android:color="#30AAAAAA" />
+            <corners android:radius="5dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <padding android:top="0.5dp" android:right="1dp" android:bottom="1dp" android:left="0.5dp" />
+            <solid android:color="#40AAAAAA" />
+            <corners android:radius="5dp"/>
+        </shape>
+    </item>
+
+    <!-- Background -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/nliveo_orange_colorPrimary"/>
+            <size
+                android:width="560dp"
+                android:height="56dp"/>
+            <corners android:radius="2dp"/>
+        </shape>
+
+    </item>
+</layer-list>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="website_url">http://quasar-academy.com</string>
+    <string name="api_endpoint">mypreciousapi</string>
+
+    <string name="nav_header0">Phoenix</string>
+    <string name="nav_option1">Home</string>
+    <string name="nav_option2">Favourites</string>
+    <string name="nav_header3">Categories</string>
+
+</resources>
