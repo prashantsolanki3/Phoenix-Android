@@ -46,9 +46,9 @@ public class GetPostBySlug {
                 VolleyLog.d("VOLLEY", "Response: " + response.toString());
                 //if (response != null) {
                 PostSingle event = parseJsonFeed(response);
-                String string =   "<html><head>"+ Utils.getCache(context, WebCSS.class.getName())+"</head><body>"
+                /*String string =   "<html><head>"+ Utils.getCache(context, WebCSS.class.getName())+"</head><body>"
                         + event.getPost().getContent()+Utils.getCache(context, WebJS.class.getName())+"</body></html>";
-                    observableWebViewWithHeader.loadData(string, "text/html", "UTF-8");
+                    observableWebViewWithHeader.loadData(string, "text/html", "UTF-8");*/
                    EventBus.getDefault().post(event);
             //    }
             }

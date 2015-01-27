@@ -9,7 +9,7 @@ android {
         applicationId "com.quasar_productions.phoenix"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 2
+        versionCode 3
         versionName '20150126'
     }
     buildTypes {
@@ -62,5 +62,4 @@ dependencies {
     //Floating Buttons
     compile 'de.greenrobot:greendao:1.3.7'
     compile 'de.greenrobot:greendao-generator:1.3.1'
-
 }

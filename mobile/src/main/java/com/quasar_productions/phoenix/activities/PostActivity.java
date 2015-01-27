@@ -1,17 +1,24 @@
 package com.quasar_productions.phoenix.activities;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.AbsoluteLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -22,13 +29,19 @@ import com.manuelpeinado.fadingactionbar.view.OnScrollChangedCallback;
 import com.nispok.snackbar.Snackbar;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.quasar_productions.phoenix.R;
+import com.quasar_productions.phoenix.adapters.HorizontalLinearRecyclerViewAdapter;
 import com.quasar_productions.phoenix_lib.AppController;
 import com.quasar_productions.phoenix_lib.POJO.PostSingle;
+import com.quasar_productions.phoenix_lib.POJO.WebCSS;
+import com.quasar_productions.phoenix_lib.POJO.WebJS;
+import com.quasar_productions.phoenix_lib.Utils.Utils;
 import com.quasar_productions.phoenix_lib.WebView.ChromeClientPhoenix;
 import com.quasar_productions.phoenix_lib.WebView.WebViewClientPhoenix;
 import com.quasar_productions.phoenix_lib.requests.GetPostBySlug;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 
 import de.greenrobot.event.EventBus;
@@ -115,9 +128,34 @@ public class PostActivity extends ActionBarActivity implements OnScrollChangedCa
                 +event.getPost().getContent()+Utils.getCache(getApplicationContext(), WebJS.class.getName())+"</body></html>";
        WebViewWithHeader.loadData(string, "text/html", "UTF-8");*/
         postSingle =event;
+            Picasso.with(getApplicationContext())
+                    .load(event.getPost().getThumbnail_images().getMedium().getUrl() == null ? "error" : event.getPost().getThumbnail_images().getMedium().getUrl())
+                    .into((ImageView) mHeader, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            //WebViewWithHeader.get
+                            Resources r = getResources();
+                            float paddingBottom= (float)mHeader.getWidth()*((float)((ImageView) mHeader).getDrawable().getIntrinsicHeight()/(float)((ImageView) mHeader).getDrawable().getIntrinsicWidth());
+                            float padding_final = (float)((ImageView) mHeader).getDrawable().getIntrinsicHeight()*paddingBottom/(float)r.getDisplayMetrics().densityDpi;
 
-        if(event.getPost().getThumbnail_images().getMedium().getUrl()!=null)
-            Picasso.with(getApplicationContext()).load(event.getPost().getThumbnail_images().getMedium().getUrl()).into((ImageView)mHeader);
+                            Log.d("Padding"," "+padding_final+"DPI"+r.getDisplayMetrics().densityDpi);
+                            Log.d("", "IMGVIEW W: " + mHeader.getWidth() + " D H: " + ((ImageView) mHeader).getDrawable().getIntrinsicHeight() + " D W: " + ((ImageView) mHeader).getDrawable().getIntrinsicWidth()+" Calcu: "+paddingBottom);
+                            String string = "<html><head>" + Utils.getCache(getApplicationContext(), WebCSS.class.getName()) + "</head><body><div id=\"content_para\">"
+                                    + postSingle.getPost().getContent() + Utils.getCache(getApplicationContext(), WebJS.class.getName()) + "<style>\n" +
+                                    "  #content_para { padding: 0px 0px " + ((int)paddingBottom/2) + "px 0px;}\n" +
+                                    "</style>" + "</div></body></html>";
+                            WebViewWithHeader.loadData(string, "text/html", "UTF-8");
+                        }
+
+                        @Override
+                        public void onError() {
+                            String string = "<html><head>" + Utils.getCache(getApplicationContext(), WebCSS.class.getName()) + "</head><body><div id=\"content_para\">"
+                                    + postSingle.getPost().getContent() + Utils.getCache(getApplicationContext(), WebJS.class.getName()) + "<style>\n" +
+                                    "  #content_para { padding: 0px 0px " + ((ImageView) mHeader).getDrawable().getIntrinsicHeight() + "px 0px;}\n" +
+                                    "</style>" + "</div></body></html>";
+                            WebViewWithHeader.loadData(string, "text/html", "UTF-8");
+                        }
+                    });
 
     }
 
@@ -154,6 +192,8 @@ public class PostActivity extends ActionBarActivity implements OnScrollChangedCa
         WebViewWithHeader.getSettings().setJavaScriptEnabled(true);
         WebViewWithHeader.setWebChromeClient(new ChromeClientPhoenix());
         WebViewWithHeader.setWebViewClient(new WebViewClientPhoenix(progressWheel));
+
+
     }
     void setUpToolbar(){
         mToolbar = (Toolbar) findViewById(R.id.toolbar2);
