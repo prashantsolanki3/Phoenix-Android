@@ -27,12 +27,10 @@ public class GetPostBySlug {
     String postSlug;
     Context context;
     long timestamp_id;
-    ObservableWebViewWithHeader observableWebViewWithHeader;
-    public GetPostBySlug(Context context,final ObservableWebViewWithHeader observableWebViewWithHeader,final String postSlug, long timestamp_id) {
+    public GetPostBySlug(Context context,final String postSlug, long timestamp_id) {
         this.postSlug=postSlug;
         this.timestamp_id=timestamp_id;
         this.context=context;
-        this.observableWebViewWithHeader=observableWebViewWithHeader;
         FetchResults(postSlug);
     }
 

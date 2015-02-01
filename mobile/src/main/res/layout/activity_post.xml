@@ -11,8 +11,6 @@
 
 <com.manuelpeinado.fadingactionbar.view.ObservableWebViewWithHeader
     android:id="@+id/webview_title"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:scrollbars="none"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -32,11 +30,9 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar2"
-        android:layout_height="100dp"
+        android:layout_height="64dp"
         android:layout_width="match_parent"
         android:layout_gravity="top"
-        android:gravity="top"
-        android:paddingTop="16dp"
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -52,7 +48,7 @@
         android:paddingEnd="16dp"
         android:src="@drawable/ic_favorite_outline_white_18dp"
         android:background="@drawable/fab_circle_bg"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="36dp"
         android:layout_marginRight="56dp"
         android:layout_marginEnd="56dp"
 

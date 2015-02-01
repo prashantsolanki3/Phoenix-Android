@@ -1,13 +1,20 @@
 package com.quasar_productions.phoenix.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.SparseIntArray;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.quasar_productions.phoenix.R;
@@ -15,6 +22,7 @@ import com.quasar_productions.phoenix.fragments.FragmentHome;
 import com.quasar_productions.phoenix.fragments.FragmentPostByCategoryList;
 import com.quasar_productions.phoenix.fragments.FragmentRecentPosts;
 import com.quasar_productions.phoenix_lib.POJO.parents.post.Categories;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
@@ -24,6 +32,7 @@ import java.util.List;
 
 import br.liveo.interfaces.NavigationLiveoListener;
 import br.liveo.navigationliveo.NavigationLiveo;
+import de.greenrobot.event.EventBus;
 
 
 public class MainActivity extends NavigationLiveo implements NavigationLiveoListener {
@@ -47,7 +56,7 @@ public class MainActivity extends NavigationLiveo implements NavigationLiveoList
         inflater.inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
            }*/
-
+  Toolbar toolbar;
     @Override
     public void onInt(Bundle savedInstanceState) {
         //Creation of the list items is here
@@ -57,10 +66,18 @@ public class MainActivity extends NavigationLiveo implements NavigationLiveoList
         categories = Parcels.unwrap(savedInstanceState.getParcelable(getString(R.string._categories_intent)));
         setUpDrawer(categories);
 
-        Toolbar toolbar= getToolbar();
-        toolbar.setMinimumHeight(250);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,128);
+
+        toolbar= getToolbar();
+        toolbar.setLayoutParams(params);
+        toolbar.setSubtitle(" ");
+        toolbar.setMinimumHeight(128);
+
         setSupportActionBar(toolbar);
+
     }
+
 
     void setUpDrawer(ArrayList<Categories> categories){
         // set listener {required}
@@ -107,22 +124,26 @@ public class MainActivity extends NavigationLiveo implements NavigationLiveoList
         Fragment mFragment;
         if(position==1){
             mFragment  = new FragmentHome().newInstance();
+            toolbar.setSubtitle("Home");
             if (mFragment != null)
                 mFragmentManager.beginTransaction().replace(layoutContainerId, mFragment).commit();
 
         }
         else if(position==2){
             mFragment  = new FragmentRecentPosts().newInstance();
+            toolbar.setSubtitle("Favorites");
             if (mFragment != null)
                 mFragmentManager.beginTransaction().replace(layoutContainerId, mFragment).commit();
 
         }
         else if(position>3) {
            mFragment  = new FragmentPostByCategoryList().newInstance(categories.get(position-4).getId());
+            toolbar.setSubtitle(categories.get(position-4).getTitle());
             if (mFragment != null)
                 mFragmentManager.beginTransaction().replace(layoutContainerId, mFragment).commit();
 
         }
+
     }
 
 

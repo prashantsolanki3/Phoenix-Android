@@ -23,7 +23,8 @@ import android.widget.Toast;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.quasar_productions.phoenix.R;
-import com.quasar_productions.phoenix.activities.PostActivity;
+import com.quasar_productions.phoenix.activities.PostActivityParallax;
+import com.quasar_productions.phoenix.activities.PostActivityPlain;
 import com.quasar_productions.phoenix.adapters.LinearRecyclerViewAdapter;
 import com.quasar_productions.phoenix_lib.AppController;
 import com.quasar_productions.phoenix_lib.POJO.PostsResult;
@@ -214,7 +215,7 @@ public class FragmentPostBySearch extends Fragment {
                         Snackbar.with(getActivity()).text("Nailed Title").show(getActivity());
                     }
                 });
-                Intent intent=new Intent(getActivity(), PostActivity.class);
+                Intent intent=new Intent(getActivity(), PostActivityPlain.class);
                 Bundle bundle = new Bundle();
                 timestamp_id= SystemClock.elapsedRealtime();
                 bundle.putLong("timestamp_id",timestamp_id);

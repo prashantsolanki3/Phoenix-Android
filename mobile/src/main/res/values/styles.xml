@@ -1,6 +1,8 @@
 <resources>
     <!--Customize here the subject of your application-->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionModeOverlay">true</item>
+    </style>
 <style name="AppTheme.Blue" parent="AppTheme">
     <!-- Customize your theme here. -->
     <item name="colorPrimary">@color/nliveo_blue_colorPrimary</item>
@@ -9,7 +11,7 @@
 </style>
     <style name="AppTheme.NoActionBar.Blue" parent="AppTheme">
         <!-- Customize your theme here. -->
-        <item name="android:windowActionBar">false</item>
+
         <item name="colorPrimary">@color/nliveo_blue_colorPrimary</item>
         <item name="colorPrimaryDark">@color/nliveo_blue_colorPrimaryDark</item>
         <item name="colorAccent">@color/nliveo_blue_colorPrimary</item>

@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pnikosis.materialishprogress.ProgressWheel;
@@ -34,14 +35,14 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<GridRecyclerVi
         public final TextView title;
         public final ImageView featured_src;
         public Post post;
-        LinearLayout container;
+        RelativeLayout container;
 
 
         public SimpleViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
            featured_src = (ImageView) view.findViewById(R.id.featured_src);
-            container = (LinearLayout) view.findViewById(R.id.frame);
+            container = (RelativeLayout) view.findViewById(R.id.frame);
         }
 
         public void setData(Context mContext, Post post,int height,int width) {
@@ -175,7 +176,7 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<GridRecyclerVi
         // If the bound view wasn't previously displayed on screen, it's animated
         if (position > lastPosition)
         {
-            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.abc_slide_in_bottom);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }

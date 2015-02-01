@@ -37,12 +37,14 @@ public class LinearRecyclerViewAdapter extends RecyclerView.Adapter<LinearRecycl
         public Post post;
         RelativeLayout container;
         ProgressWheel progressWheel;
+        public int textBG;
         public SimpleViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
-           featured_src = (ImageView) view.findViewById(R.id.featured_src);
+            featured_src = (ImageView) view.findViewById(R.id.featured_src);
             container = (RelativeLayout) view.findViewById(R.id.frame);
             progressWheel = (ProgressWheel) view.findViewById(R.id.progress_wheel);
+            textBG=0;
         }
 
         public void setData(Context mContext, Post post) {
@@ -64,6 +66,7 @@ public class LinearRecyclerViewAdapter extends RecyclerView.Adapter<LinearRecycl
                                 Palette.Swatch swatch = palette.getVibrantSwatch();
                                 if (swatch != null) {
                                     title.setBackgroundColor(swatch.getRgb());
+                                    textBG=swatch.getRgb();
                                     title.setTextColor(swatch.getTitleTextColor());
                                 }
                                 progressWheel.stopSpinning();

@@ -20,5 +20,6 @@
     <!-- Application Constant Strings -->
     <string name="_categories_intent">categories</string>
     <string name="title_activity_post">PostActivity</string>
+    <string name="title_activity_post_activity_plain">PostActivityPlain</string>
 
 </resources>

@@ -1,13 +1,11 @@
 package com.quasar_productions.phoenix.activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.quasar_productions.phoenix.R;
@@ -39,13 +37,7 @@ public class Start extends ActionBarActivity {
         setContentView(R.layout.activity_start);
         waveView = (WaveView) findViewById(R.id.wave_view);
         TextView textView =(TextView) findViewById(R.id.tv_start);
-        final Intent i= new Intent(this,PostActivity.class);;
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(i);
-            }
-        });
+        final Intent i= new Intent(this,PostActivityParallax.class);;
         textView.setText(getString(R.string.app_name));
         GetCategories getCategories = new GetCategories();
         waveView.setProgress(85);
