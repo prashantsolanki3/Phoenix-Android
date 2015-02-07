@@ -13,7 +13,7 @@ public class Comments {
     private String date;
     private String content;
     private int parent;
-
+    public  static final String KEY_COMMENTS = "key_comments";
     public Comments() {
     }
 

@@ -116,6 +116,7 @@ public class MainActivity extends NavigationLiveo implements NavigationLiveoList
 
         this.setNavigationAdapter(mListNameItem, mListIconItem,mListHeaderItem,mSparseCounterItem);
         setDefaultStartPositionNavigation(1);
+        openDrawer();
     }
 
     @Override
@@ -123,7 +124,7 @@ public class MainActivity extends NavigationLiveo implements NavigationLiveoList
         FragmentManager mFragmentManager = getSupportFragmentManager();
         Fragment mFragment;
         if(position==1){
-            mFragment  = new FragmentHome().newInstance();
+            mFragment  = new FragmentHome().newInstance(getApplicationContext());
             toolbar.setSubtitle("Home");
             if (mFragment != null)
                 mFragmentManager.beginTransaction().replace(layoutContainerId, mFragment).commit();

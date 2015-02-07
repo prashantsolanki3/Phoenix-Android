@@ -25,9 +25,10 @@ dependencies {
     provided 'org.parceler:parceler:0.2.15+'
     compile 'com.google.code.gson:gson:2.3.1+'
     compile 'me.neavo:volley:2014.12.09+'
-    compile 'com.nispok:snackbar:2.2.1+'
+    compile 'com.nispok:snackbar:2.7.5+'
     compile 'de.greenrobot:eventbus:2.4.0+'
     compile 'org.jsoup:jsoup:1.8.1+'
     compile 'com.pnikosis:materialish-progress:1.4+'
     compile 'com.github.manuelpeinado.fadingactionbar:fadingactionbar:3.1.2+'
+    compile 'com.android.support:palette-v7:21.0.3'
 }

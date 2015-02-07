@@ -18,14 +18,15 @@ public class PostsResult {
     private int page;
     private ArrayList<Post> posts;
     private String error;
-    private String fragment_name;
+    private RequestId requestId;
+    public static final String KEY_POST_RESULT = "key_postresult";
 
-    public String getFragment_name() {
-        return fragment_name;
+    public RequestId getRequestId() {
+        return requestId;
     }
 
-    public void setFragment_name(String fragment_name) {
-        this.fragment_name = fragment_name;
+    public void setRequestId(RequestId requestId) {
+        this.requestId = requestId;
     }
 
     public String getError() {

@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.manuelpeinado.fadingactionbar.view.ObservableWebViewWithHeader;
 import com.quasar_productions.phoenix_lib.AppController;
 import com.quasar_productions.phoenix_lib.POJO.PostSingle;
+import com.quasar_productions.phoenix_lib.POJO.RequestId;
 import com.quasar_productions.phoenix_lib.POJO.WebCSS;
 import com.quasar_productions.phoenix_lib.POJO.WebJS;
 import com.quasar_productions.phoenix_lib.Utils.Utils;
@@ -26,10 +27,10 @@ public class GetPostBySlug {
     JsonObjectRequest jsonObjectRequest;
     String postSlug;
     Context context;
-    long timestamp_id;
-    public GetPostBySlug(Context context,final String postSlug, long timestamp_id) {
+    RequestId requestId;
+    public GetPostBySlug(Context context,final String postSlug,RequestId requestId) {
         this.postSlug=postSlug;
-        this.timestamp_id=timestamp_id;
+        this.requestId=requestId;
         this.context=context;
         FetchResults(postSlug);
     }
@@ -42,28 +43,26 @@ public class GetPostBySlug {
             @Override
             public void onResponse(JSONObject response) {
                 VolleyLog.d("VOLLEY", "Response: " + response.toString());
-                //if (response != null) {
+                if (response != null) {
                 PostSingle event = parseJsonFeed(response);
-                /*String string =   "<html><head>"+ Utils.getCache(context, WebCSS.class.getName())+"</head><body>"
-                        + event.getPost().getContent()+Utils.getCache(context, WebJS.class.getName())+"</body></html>";
-                    observableWebViewWithHeader.loadData(string, "text/html", "UTF-8");*/
                    EventBus.getDefault().post(event);
-            //    }
+              }
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("VOLLEY", "Error: " + error.getMessage());
+                EventBus.getDefault().post(error);
             }
         });
-        AppController.getInstance().addToRequestQueue(jsonObjectRequest,""+postSlug+timestamp_id);
+        AppController.getInstance().addToRequestQueue(jsonObjectRequest,requestId);
     }
 
     private PostSingle parseJsonFeed(JSONObject response) {
             Gson gson=new Gson();
             PostSingle postSingle= gson.fromJson(response.toString(), PostSingle.class);
-            postSingle.setFragment_name(postSlug.concat(String.valueOf(timestamp_id)));
+            postSingle.setRequestId(requestId);
             return postSingle;
     }
 }

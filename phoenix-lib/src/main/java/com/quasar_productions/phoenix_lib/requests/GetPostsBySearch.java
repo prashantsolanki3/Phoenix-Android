@@ -10,6 +10,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.quasar_productions.phoenix_lib.AppController;
 import com.quasar_productions.phoenix_lib.POJO.PostsResult;
+import com.quasar_productions.phoenix_lib.POJO.RequestId;
 import com.quasar_productions.phoenix_lib.POJO.parents.post.Author;
 import com.quasar_productions.phoenix_lib.POJO.parents.Post;
 
@@ -27,15 +28,15 @@ import de.greenrobot.event.EventBus;
 public class GetPostsBySearch {
     JsonObjectRequest jsonObjectRequest;
     String search;
-    long timestamp_id;
-    public GetPostsBySearch(String search,long timestamp_id) {
+    RequestId requestId;
+    public GetPostsBySearch(String search,RequestId requestId) {
         this.search=search;
-        this.timestamp_id=timestamp_id;
+        this.requestId=requestId;
         FetchResults(search,1);
     }
-    public GetPostsBySearch(String search, int page,long timestamp_id) {
+    public GetPostsBySearch(String search, int page,RequestId requestId) {
         this.search=search;
-        this.timestamp_id=timestamp_id;
+        this.requestId=requestId;
         FetchResults(search,page);
     }
 
@@ -55,10 +56,11 @@ public class GetPostsBySearch {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("VOLLEY", "Error: " + error.getMessage());
+                EventBus.getDefault().post(error);
             }
         });
         Log.d("Search Request: ","http://quasar-academy.com/mypreciousapi/get_search_results/?search="+search+"&count=5&page="+Page+"&post_type");
-        AppController.getInstance().addToRequestQueue(jsonObjectRequest,this.search.concat(String.valueOf(timestamp_id)));
+        AppController.getInstance().addToRequestQueue(jsonObjectRequest,requestId);
     }
 
 
@@ -67,7 +69,7 @@ public class GetPostsBySearch {
     private PostsResult parseJsonFeed(JSONObject response) {
         Gson gson=new Gson();
         PostsResult postsResult= gson.fromJson(response.toString(), PostsResult.class);
-        postsResult.setFragment_name(search.concat(String.valueOf(timestamp_id)));
+        postsResult.setRequestId(requestId);
         return postsResult;
     }
 }

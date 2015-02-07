@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<android.support.v7.widget.RecyclerView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top"
+    android:focusable="true"
+    android:clickable="true"
+    android:layout_weight="100"
+    android:id="@+id/comments_recycler"
+    />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:paddingTop="4dp"
+        android:layout_weight="1"
+        android:background="@color/black_semi_transparent"
+        android:layout_height="wrap_content">
+        <EditText
+        android:inputType="textAutoCorrect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/comment_box"
+        android:textColor="@color/white"
+        android:layout_weight="100">
+            <requestFocus/>
+        </EditText>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/submit_comment"
+        android:layout_weight="1"
+        android:background="@color/nliveo_transparent"
+        android:src="@android:drawable/ic_menu_send"/>
+    </LinearLayout>
+</LinearLayout>

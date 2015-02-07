@@ -26,13 +26,13 @@ MERGED from Phoenix:phoenix-lib:unspecified:14:5
 MERGED from com.android.support:appcompat-v7:21.0.3:16:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from me.neavo:volley:2014.12.09:11:5
-MERGED from com.nispok:snackbar:2.2.1:12:5
-MERGED from com.android.support:recyclerview-v7:21.0.3:17:5
-MERGED from com.android.support:support-v4:21.0.3:16:5
+MERGED from com.nispok:snackbar:2.7.5:10:5
 MERGED from com.pnikosis:materialish-progress:1.4:11:5
 MERGED from com.android.support:appcompat-v7:21.0.3:16:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.github.manuelpeinado.fadingactionbar:fadingactionbar:3.1.2:6:5
+MERGED from com.android.support:palette-v7:21.0.3:16:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.android.support:recyclerview-v7:21.0.3:17:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.android.support:appcompat-v7:21.0.3:16:5
@@ -126,21 +126,19 @@ ADDED from AndroidManifest.xml:44:17
 	android:name
 		ADDED from AndroidManifest.xml:44:27
 activity#com.quasar_productions.phoenix.activities.PreferenceActivity
-ADDED from AndroidManifest.xml:47:9
+ADDED from AndroidManifest.xml:49:9
 	android:label
-		ADDED from AndroidManifest.xml:49:13
+		ADDED from AndroidManifest.xml:51:13
 	android:theme
+		ADDED from AndroidManifest.xml:52:13
+	android:name
 		ADDED from AndroidManifest.xml:50:13
-	android:name
-		ADDED from AndroidManifest.xml:48:13
 activity#com.quasar_productions.phoenix.activities.PostActivityPlain
-ADDED from AndroidManifest.xml:52:9
-	android:label
-		ADDED from AndroidManifest.xml:55:13
+ADDED from AndroidManifest.xml:55:9
 	android:theme
-		ADDED from AndroidManifest.xml:54:13
+		ADDED from AndroidManifest.xml:57:13
 	android:name
-		ADDED from AndroidManifest.xml:53:13
+		ADDED from AndroidManifest.xml:56:13
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5
@@ -154,13 +152,13 @@ MERGED from Phoenix:phoenix-lib:unspecified:7:5
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
 MERGED from me.neavo:volley:2014.12.09:7:5
-MERGED from com.nispok:snackbar:2.2.1:8:5
-MERGED from com.android.support:recyclerview-v7:21.0.3:15:5
-MERGED from com.android.support:support-v4:21.0.3:15:5
+MERGED from com.nispok:snackbar:2.7.5:6:5
 MERGED from com.pnikosis:materialish-progress:1.4:7:5
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
 MERGED from com.github.manuelpeinado.fadingactionbar:fadingactionbar:3.1.2:4:5
+MERGED from com.android.support:palette-v7:21.0.3:15:5
+MERGED from com.android.support:support-v4:21.0.3:15:5
 MERGED from org.lucasr.twowayview:core:1.0.0-SNAPSHOT:22:5
 MERGED from org.lucasr.twowayview:layouts:1.0.0-SNAPSHOT:22:5
 MERGED from com.android.support:recyclerview-v7:21.0.3:15:5
@@ -209,7 +207,6 @@ ADDED from Phoenix:phoenix-lib:unspecified:12:5
 		ADDED from Phoenix:phoenix-lib:unspecified:12:22
 activity#android.support.v7.widget.TestActivity
 ADDED from com.android.support:recyclerview-v7:21.0.3:18:9
-MERGED from com.android.support:recyclerview-v7:21.0.3:18:9
 	android:label
 		ADDED from com.android.support:recyclerview-v7:21.0.3:18:19
 	android:name

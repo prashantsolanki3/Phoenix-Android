@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.quasar_productions.phoenix.R;
 import com.quasar_productions.phoenix.implimentations.PaletteTransformation;
+import com.quasar_productions.phoenix_lib.POJO.ColorScheme;
 import com.quasar_productions.phoenix_lib.POJO.parents.Post;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -33,12 +34,17 @@ public class HorizontalLinearRecyclerViewAdapter extends RecyclerView.Adapter<Ho
         public final ImageView featured_src;
         public Post post;
         LinearLayout container;
+        private ColorScheme colorScheme;
+        public ColorScheme getColorScheme() {
+            return colorScheme;
+        }
 
         public SimpleViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
            featured_src = (ImageView) view.findViewById(R.id.featured_src);
             container = (LinearLayout) view.findViewById(R.id.frame);
+
         }
 
         public void setData(Context mContext, Post post) {
@@ -57,6 +63,7 @@ public class HorizontalLinearRecyclerViewAdapter extends RecyclerView.Adapter<Ho
                             public void onSuccess() {
                                 Bitmap bitmap = ((BitmapDrawable) featured_src.getDrawable()).getBitmap(); // Ew!
                                 Palette palette = PaletteTransformation.getPalette(bitmap);
+                                colorScheme = new ColorScheme(palette);
                                 Palette.Swatch swatch = palette.getVibrantSwatch();
                                 if (swatch != null) {
                                     title.setBackgroundColor(swatch.getRgb());

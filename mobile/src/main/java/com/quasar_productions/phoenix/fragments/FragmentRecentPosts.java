@@ -20,6 +20,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.pnikosis.materialishprogress.ProgressWheel;
@@ -28,11 +29,14 @@ import com.quasar_productions.phoenix.activities.PostActivityParallax;
 import com.quasar_productions.phoenix.activities.PostActivityPlain;
 import com.quasar_productions.phoenix.adapters.GridRecyclerViewAdapter;
 import com.quasar_productions.phoenix_lib.AppController;
+import com.quasar_productions.phoenix_lib.POJO.ColorScheme;
 import com.quasar_productions.phoenix_lib.POJO.PostsResult;
+import com.quasar_productions.phoenix_lib.POJO.RequestId;
 import com.quasar_productions.phoenix_lib.POJO.parents.Post;
 import com.quasar_productions.phoenix_lib.requests.GetRecentPosts;
 
 import org.lucasr.twowayview.ItemClickSupport;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -52,18 +56,18 @@ public class FragmentRecentPosts extends Fragment {
     private boolean mSearchCheck;
     GetRecentPosts getRecentPosts;
     private int page =1;
-    private long timestamp_id;
     String get_recent_post_id="recent";
     //SwipeRefreshLayout mSwipeRefreshLayout;
     ProgressWheel progressWheel;
+    RequestId requestId;
 
     public FragmentRecentPosts newInstance(){
         FragmentRecentPosts mFragment = new FragmentRecentPosts();
-        timestamp_id = SystemClock.elapsedRealtime();
         Bundle bundle=new Bundle();
-        bundle.putLong("timestamp_id",timestamp_id);
+        requestId=new RequestId();
+        bundle.putParcelable(RequestId.KEY_REQUEST_ID,Parcels.wrap(requestId));
         mFragment.setArguments(bundle);
-        getRecentPosts = new GetRecentPosts(timestamp_id);
+        getRecentPosts = new GetRecentPosts(requestId);
         return mFragment;
     }
 
@@ -75,7 +79,7 @@ public class FragmentRecentPosts extends Fragment {
         rootView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT ));
         progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
         setupRecyclerView(rootView);
-        timestamp_id = getArguments().getLong("timestamp_id");
+        requestId = Parcels.unwrap(getArguments().getParcelable(RequestId.KEY_REQUEST_ID));
      //   setupRefreshView(rootView);
         return rootView;
     }
@@ -167,7 +171,7 @@ public class FragmentRecentPosts extends Fragment {
     // This method will be called when a MessageEvent is posted
    public void onEventMainThread(PostsResult event){
 
-       if(event.getCount()>0&&event.getFragment_name().equals(get_recent_post_id.concat(String.valueOf(timestamp_id))))
+       if(event.getCount()>0&&event.getRequestId().equals(requestId))
            adapter.addPosts(event.getPosts());
 
 
@@ -178,6 +182,9 @@ public class FragmentRecentPosts extends Fragment {
            EventBus.getDefault().unregister(this);*/
    }
 
+    public void onEvent(VolleyError volleyError){
+        Snackbar.with(getActivity()).text("Unable to Load. Try Again Later.").show(getActivity());
+    }
 
     private void setupRecyclerView(View view){
 
@@ -212,9 +219,9 @@ public class FragmentRecentPosts extends Fragment {
 
                 Intent intent=new Intent(getActivity(), PostActivityPlain.class);
                 Bundle bundle = new Bundle();
-                timestamp_id= SystemClock.elapsedRealtime();
-                bundle.putLong("timestamp_id",timestamp_id);
                 bundle.putString("post_slug",childViewHolder.post.getSlug());
+                bundle.putParcelable(Post.KEY_POST, Parcels.wrap(childViewHolder.post));
+                bundle.putParcelable(ColorScheme.KEY_COLOR_SCHEME,Parcels.wrap(childViewHolder.getColorScheme()));
                 intent.putExtras(bundle);
                 startActivity(intent);
                 getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
@@ -238,7 +245,7 @@ public class FragmentRecentPosts extends Fragment {
                         .animation(true)
                         .actionListener(new ActionClickListener() {
                             @Override
-                            public void onActionClicked() {
+                            public void onActionClicked(Snackbar snackbar) {
                                 Snackbar.with(getActivity()).swipeToDismiss(true).animation(true).text("Undo Clicked").show(getActivity());
                             }
                         })
@@ -300,7 +307,7 @@ public class FragmentRecentPosts extends Fragment {
                     //Your Code Here...
 
                     Log.d("Endless Scroll", "List Finished");
-                    getRecentPosts = new GetRecentPosts(++page,timestamp_id);
+                    getRecentPosts = new GetRecentPosts(++page,requestId);
                     loading = true;
 
                 }

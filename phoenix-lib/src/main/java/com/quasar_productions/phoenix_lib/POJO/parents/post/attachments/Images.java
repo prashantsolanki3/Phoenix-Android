@@ -18,7 +18,7 @@ public class Images {
     private ImgDimen quad;
     private ImgDimen single;
     private ImgDimen cover;
-
+    public static final String KEY_IMAGES = "key_images";
     public Images() {
     }
 

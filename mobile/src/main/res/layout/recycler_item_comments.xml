@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_margin="4dp"
+    android:background="@drawable/list_background"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:padding="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Name"
+        android:textStyle="bold"
+        android:textColor="@color/nliveo_black"
+        android:id="@+id/name" />
+
+    <TextView
+        android:padding="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/nliveo_black"
+        android:text="content"
+        android:id="@+id/content"
+        android:autoLink="all|web|phone|map|email"
+        android:autoText="true" />
+
+    <TextView
+        android:padding="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmallInverse"
+        android:text="Small Text"
+        android:textColor="@color/nliveo_gray"
+        android:id="@+id/date" />
+
+</LinearLayout>

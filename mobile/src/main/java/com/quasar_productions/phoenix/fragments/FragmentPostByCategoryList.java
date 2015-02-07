@@ -20,6 +20,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.pnikosis.materialishprogress.ProgressWheel;
@@ -28,11 +29,14 @@ import com.quasar_productions.phoenix.activities.PostActivityParallax;
 import com.quasar_productions.phoenix.activities.PostActivityPlain;
 import com.quasar_productions.phoenix.adapters.LinearRecyclerViewAdapter;
 import com.quasar_productions.phoenix_lib.AppController;
+import com.quasar_productions.phoenix_lib.POJO.ColorScheme;
 import com.quasar_productions.phoenix_lib.POJO.PostsResult;
+import com.quasar_productions.phoenix_lib.POJO.RequestId;
 import com.quasar_productions.phoenix_lib.POJO.parents.Post;
 import com.quasar_productions.phoenix_lib.requests.GetPostsByCategory;
 
 import org.lucasr.twowayview.ItemClickSupport;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -56,16 +60,16 @@ public class FragmentPostByCategoryList extends Fragment {
     private int page =1;
    // SwipeRefreshLayout mSwipeRefreshLayout;
     ProgressWheel progressWheel;
-    long timestamp_id;
-
+    RequestId requestId;
     public FragmentPostByCategoryList newInstance(int categoryId){
         FragmentPostByCategoryList mFragment = new FragmentPostByCategoryList();
         Bundle args = new Bundle();
+        requestId = new RequestId();
+        requestId.generateId(categoryId);
         args.putInt(ARG_CATEGORY, categoryId);
-        timestamp_id = SystemClock.elapsedRealtime();
-        args.putLong("timestamp_id",timestamp_id);
+        args.putParcelable(RequestId.KEY_REQUEST_ID,Parcels.wrap(requestId));
         mFragment.setArguments(args);
-        getPostsByCategory = new GetPostsByCategory(categoryId,timestamp_id);
+        getPostsByCategory = new GetPostsByCategory(categoryId,requestId);
         return mFragment;
     }
 
@@ -78,9 +82,10 @@ public class FragmentPostByCategoryList extends Fragment {
         progressWheel = (ProgressWheel) rootView.findViewById(R.id.progress_wheel);
 
         categoryId = getArguments().getInt(ARG_CATEGORY);
-        timestamp_id=getArguments().getLong("timestamp_id");
+        requestId = Parcels.unwrap(getArguments().getParcelable(RequestId.KEY_REQUEST_ID));
         setupRecyclerView(rootView);
        // setupRefreshView(rootView);
+        setRetainInstance(true);
         return rootView;
     }
 
@@ -165,13 +170,13 @@ public class FragmentPostByCategoryList extends Fragment {
     public void onStop() {
         if(EventBus.getDefault().isRegistered(this));
         EventBus.getDefault().unregister(this);
-        AppController.getInstance().cancelPendingRequests(String.valueOf(categoryId).concat(String.valueOf(timestamp_id)));
+        AppController.getInstance().cancelPendingRequests(requestId);
         super.onStop();
     }
     // This method will be called when a MessageEvent is posted
    public void onEventAsync(PostsResult event){
 
-       if(event.getCount()>0&&event.getFragment_name().equals(String.valueOf(categoryId).concat(String.valueOf(timestamp_id))))
+       if(event.getCount()>0&&event.getRequestId().equals(requestId))
            adapter.addPosts(event.getPosts());
 
        /*if(mSwipeRefreshLayout!=null)
@@ -181,8 +186,12 @@ public class FragmentPostByCategoryList extends Fragment {
            EventBus.getDefault().unregister(this);*/
    }
 
+    public void onEvent(VolleyError volleyError){
+        Snackbar.with(getActivity()).text("Unable to Load. Try Again Later.").show(getActivity());
+    }
 
-    private void setupRecyclerView(final View view){
+
+    private void setupRecyclerView(final View view) {
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
         mRecyclerView.setHasFixedSize(true);
@@ -194,12 +203,6 @@ public class FragmentPostByCategoryList extends Fragment {
             @Override
             public void onItemClick(RecyclerView parent, View child, int position, long id) {
                 LinearRecyclerViewAdapter.SimpleViewHolder childViewHolder = (LinearRecyclerViewAdapter.SimpleViewHolder) parent.getChildViewHolder(child);
-
-
-/* Intent i = new Intent(getActivity(),Detailed.class);
-                i.putExtra("product",childViewHolder.product);
-*/
-
                 childViewHolder.featured_src.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -212,25 +215,19 @@ public class FragmentPostByCategoryList extends Fragment {
                         Snackbar.with(getActivity()).text("Nailed Title").show(getActivity());
                     }
                 });
-/*
-                FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
-                Fragment mFragment = new FragmentPostViewWithoutScroll().newInstance(childViewHolder.post.getSlug());
-                if (mFragment != null) {
-                    mFragmentManager.beginTransaction().replace(br.liveo.navigationliveo.R.id.container, mFragment).addToBackStack(null).commit();
 
-                }*/
-                Intent intent=new Intent(getActivity(), PostActivityPlain.class);
+                Intent intent = new Intent(getActivity(), PostActivityPlain.class);
                 Bundle bundle = new Bundle();
-                timestamp_id= SystemClock.elapsedRealtime();
-                bundle.putLong("timestamp_id",timestamp_id);
-                bundle.putString("post_slug",childViewHolder.post.getSlug());
+                bundle.putParcelable(Post.KEY_POST, Parcels.wrap(childViewHolder.post));
+                /*bundle.putInt("title_bg", childViewHolder.titleBg);
+                bundle.putInt("title_color", childViewHolder.titleColor);*/
+                bundle.putParcelable(ColorScheme.KEY_COLOR_SCHEME,Parcels.wrap(childViewHolder.getColorScheme()));
                 intent.putExtras(bundle);
                 startActivity(intent);
                 getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
 
         });
-
 
 
         itemClick.setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
@@ -243,7 +240,7 @@ public class FragmentPostByCategoryList extends Fragment {
                         .animation(true)
                         .actionListener(new ActionClickListener() {
                             @Override
-                            public void onActionClicked() {
+                            public void onActionClicked(Snackbar snackbar) {
                                 Snackbar.with(getActivity()).swipeToDismiss(true).animation(true).text("Undo Clicked").show(getActivity());
                             }
                         })
@@ -252,7 +249,7 @@ public class FragmentPostByCategoryList extends Fragment {
             }
         });
 
-        adapter = new LinearRecyclerViewAdapter(getActivity(),new ArrayList<Post>(),progressWheel);
+        adapter = new LinearRecyclerViewAdapter(getActivity(), new ArrayList<Post>(), progressWheel);
         mRecyclerView.setAdapter(adapter);
         //Setting Up Layout Manger
         final LinearLayoutManager mLayoutManager;
@@ -263,7 +260,7 @@ public class FragmentPostByCategoryList extends Fragment {
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
-                     // updateState(scrollState);
+                // updateState(scrollState);
 
             }
 
@@ -293,41 +290,14 @@ public class FragmentPostByCategoryList extends Fragment {
                 }
                 if (!loading && (totalItemCount - visibleItemCount)
                         <= (firstVisibleItem + visibleThreshold)) {
-                    // End has been reached
-                    //Your Code Here...
-
                     Log.d("Endless Scroll", "List Finished");
-                    getPostsByCategory = new GetPostsByCategory(categoryId,++page,timestamp_id);
+                    getPostsByCategory = new GetPostsByCategory(categoryId, ++page, requestId);
                     loading = true;
 
                 }
-
-                /**/
             }
 
         });
-
-
-      /*  final Drawable divider = getResources().getDrawable(R.drawable.divider);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(divider));*/
-       // mSwipeRefreshLayout.setRefreshing(true);
     }
-   /* private void setupRefreshView(View view){
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.accent_material_light),getResources().getColor(R.color.accent_material_dark));
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-                mSwipeRefreshLayout.setRefreshing(true);
-                Snackbar.with(getActivity()).animation(true).swipeToDismiss(true).text("Refreshing").show(getActivity());
-                timestamp_id = SystemClock.elapsedRealtime();
-                page=0;
-                getPostsByCategory = new GetPostsByCategory(categoryId,++page,timestamp_id);
-                adapter.clearPosts();
-            }
-        });
-    }*/
 
 }

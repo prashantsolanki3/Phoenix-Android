@@ -1,5 +1,6 @@
 package com.quasar_productions.phoenix_lib.requests;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -10,7 +11,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.quasar_productions.phoenix_lib.AppController;
 import com.quasar_productions.phoenix_lib.POJO.PostsResult;
+import com.quasar_productions.phoenix_lib.POJO.RequestId;
 import com.quasar_productions.phoenix_lib.POJO.parents.Post;
+import com.quasar_productions.phoenix_lib.Utils.WebConfigBuilder;
 
 import org.json.JSONObject;
 
@@ -21,25 +24,25 @@ import de.greenrobot.event.EventBus;
  */
 public class GetFeaturedPosts {
     JsonObjectRequest jsonObjectRequest;
-    String featuredSlug;
-    long timestamp_id;
+    Context context;
+    RequestId requestId;
 
-    public GetFeaturedPosts(final String featuredSlug, long timestamp_id) {
-        this.featuredSlug=featuredSlug;
-        this.timestamp_id=timestamp_id;
-        FetchResults(featuredSlug,1);
+    public GetFeaturedPosts(Context context,RequestId requestId) {
+        this.context=context;
+        this.requestId=requestId;
+        FetchResults(1);
     }
-    public GetFeaturedPosts(final String featuredSlug, int page, long timestamp_id) {
-        this.featuredSlug=featuredSlug;
-        this.timestamp_id=timestamp_id;
-        FetchResults(featuredSlug,page);
+    public GetFeaturedPosts(Context context,RequestId requestId,int page) {
+        this.context=context;
+        this.requestId=requestId;
+        FetchResults(page);
     }
 
-    public void FetchResults(final String featuredSlug, int Page){
-
-        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                "http://quasar-academy.com/mypreciousapi/get_tag_posts/?id&slug="+featuredSlug+"&count=5&page="+Page+"&post_type", null, new Response.Listener<JSONObject>() {
-
+    public void FetchResults(int page){
+        WebConfigBuilder webConfigBuilder = new WebConfigBuilder(context);
+        Log.d(getClass().getName(),webConfigBuilder.getFeturedPostURL(page));
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, webConfigBuilder.getFeturedPostURL(page)
+                , null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 VolleyLog.d("VOLLEY", "Response: " + response.toString());
@@ -50,10 +53,10 @@ public class GetFeaturedPosts {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("VOLLEY", "Error: " + error.getMessage());
-
+                EventBus.getDefault().post(error);
             }
         });
-        AppController.getInstance().addToRequestQueue(jsonObjectRequest,""+featuredSlug+timestamp_id);
+        AppController.getInstance().addToRequestQueue(jsonObjectRequest,requestId);
     }
 
     private PostsResult parseJsonFeed(JSONObject response) {
@@ -61,7 +64,7 @@ public class GetFeaturedPosts {
             Log.d("Complete response: ", response.toString());
             Gson gson= new Gson();
             PostsResult postsResult = gson.fromJson(response.toString(), PostsResult.class);
-            postsResult.setFragment_name(featuredSlug+timestamp_id);
+            postsResult.setRequestId(requestId);
             return postsResult;
     }
 }

@@ -1,23 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:persistent="true">
 
     <PreferenceScreen
         android:title="Blog Settings">
-
         <!-- You can place more preferences here that will be shown on the next screen. -->
-        <PreferenceCategory android:title="Configuration" >
+        <PreferenceCategory android:title="Configuration">
             <EditTextPreference
                 android:key="website_url"
                 android:title="Blog URL"
-                android:summary="Enter URL of your WP Blog">
-            </EditTextPreference>
+                android:defaultValue="http://quasar-academy.com"
+                android:summary="Enter URL of your WP Blog. Eg: http://example.com"/>
             <EditTextPreference
                 android:key="api_endpoint"
                 android:title="API ENDPOINT"
-                android:summary="example.com/">
-            </EditTextPreference>
+                android:defaultValue="mypreciousapi"
+                android:summary="Enter the Api Endpoint that you've entered in the Plugin. Eg: /my_api"/>
+
         </PreferenceCategory>
+        <PreferenceCategory android:title="Featured Posts">
+            <EditTextPreference
+                android:key="featured_post_slug"
+                android:title="Featured Post Slug"
+                android:defaultValue="featured"
+                android:summary="Slug of the tag that you use from featured Posts"/>
+
+            <EditTextPreference
+                android:key="featured_post_count"
+                android:title="Featured Post Count"
+                android:inputType="number"
+                android:defaultValue="5"
+                android:summary="No of Featured Posts to display"/>
+        </PreferenceCategory>
+    </PreferenceScreen>
+    <PreferenceScreen android:title="Visuals">
+        <CheckBoxPreference android:title="Dynamic Colors"
+            android:key="dynamic_colors"
+            android:persistent="true"
+            android:summary="UI colors are dynamically changed. To match the Featured Image."
+            android:defaultValue="true"
+            />
+        <ListPreference android:key="dynamic_colors_type"
+            android:title="Dynamic Color Type"
+            android:entries="@array/dynamicColorTypes"
+            android:persistent="true"
+            android:defaultValue="1"
+            android:dialogTitle="Select Type"
+            android:entryValues="@array/dynamicColorTypeValues"/>
+
     </PreferenceScreen>
 
 </PreferenceScreen>

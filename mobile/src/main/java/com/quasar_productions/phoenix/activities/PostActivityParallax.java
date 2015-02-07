@@ -30,6 +30,7 @@ import com.pnikosis.materialishprogress.ProgressWheel;
 import com.quasar_productions.phoenix.R;
 import com.quasar_productions.phoenix_lib.AppController;
 import com.quasar_productions.phoenix_lib.POJO.PostSingle;
+import com.quasar_productions.phoenix_lib.POJO.RequestId;
 import com.quasar_productions.phoenix_lib.POJO.WebCSS;
 import com.quasar_productions.phoenix_lib.POJO.WebJS;
 import com.quasar_productions.phoenix_lib.Utils.Utils;
@@ -120,8 +121,7 @@ public class PostActivityParallax extends ActionBarActivity implements OnScrollC
     }
     void sendRequests(){
 
-        getPostBySlug = new GetPostBySlug(getApplicationContext(),post_slug,timestamp_id);
-      //  progressWheel.spin();
+        getPostBySlug = new GetPostBySlug(getApplicationContext(),post_slug,new RequestId());
 
     }
     public void onEvent(PostSingle event){

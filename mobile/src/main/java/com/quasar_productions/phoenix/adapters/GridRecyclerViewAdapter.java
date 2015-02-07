@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.pnikosis.materialishprogress.ProgressWheel;
 import com.quasar_productions.phoenix.R;
 import com.quasar_productions.phoenix.implimentations.PaletteTransformation;
+import com.quasar_productions.phoenix_lib.POJO.ColorScheme;
 import com.quasar_productions.phoenix_lib.POJO.parents.Post;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -36,14 +37,19 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<GridRecyclerVi
         public final ImageView featured_src;
         public Post post;
         RelativeLayout container;
+        ProgressWheel progressWheel;
+        private ColorScheme colorScheme;
 
-
+        public ColorScheme getColorScheme() {
+            return colorScheme;
+        }
         public SimpleViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
            featured_src = (ImageView) view.findViewById(R.id.featured_src);
-            container = (RelativeLayout) view.findViewById(R.id.frame);
-        }
+                container = (RelativeLayout) view.findViewById(R.id.frame);
+            progressWheel = (ProgressWheel) view.findViewById(R.id.progress_wheel);
+         }
 
         public void setData(Context mContext, Post post,int height,int width) {
             this.post = post;
@@ -65,11 +71,14 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<GridRecyclerVi
                                 Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
                                     @Override
                                     public void onGenerated(Palette palette) {
+                                        colorScheme = new ColorScheme(palette);
                                         Palette.Swatch swatch = palette.getVibrantSwatch();
+
                                         if (swatch != null) {
                                             title.setBackgroundColor(swatch.getRgb());
                                             title.setTextColor(swatch.getTitleTextColor());
                                         }
+                                 progressWheel.stopSpinning();
                                     }
                                 });
 
@@ -78,7 +87,7 @@ public class GridRecyclerViewAdapter extends RecyclerView.Adapter<GridRecyclerVi
 
                             @Override
                             public void onError() {
-
+                                progressWheel.stopSpinning();
                             }
                         });
         }

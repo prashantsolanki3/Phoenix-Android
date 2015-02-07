@@ -9,8 +9,8 @@ android {
         applicationId "com.quasar_productions.phoenix"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 5
-        versionName '2015.02.01'
+        versionCode 8
+        versionName '2015.02.08'
     }
     buildTypes {
         release {

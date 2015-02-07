@@ -42,17 +42,20 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.PreferenceActivity"
             android:label="@string/title_activity_preference"
             android:theme="@style/AppTheme.Blue" >
+   
         </activity>
         <activity
             android:name=".activities.PostActivityPlain"
             android:theme="@style/TranslucentToolbar"
-            android:label="@string/title_activity_post_activity_plain" >
+             >
         </activity>
     </application>
 

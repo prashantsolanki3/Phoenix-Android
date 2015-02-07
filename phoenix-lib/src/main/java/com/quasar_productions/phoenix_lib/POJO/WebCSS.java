@@ -8,7 +8,7 @@ import org.parceler.Parcel;
 @Parcel
 public class WebCSS {
     String webCSS;
-
+    public static String KEY_WEBCSS = "key_webCSS";
     public WebCSS(String webCSS) {
         this.webCSS = webCSS;
     }

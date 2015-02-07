@@ -1,8 +1,9 @@
 package com.quasar_productions.phoenix.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
@@ -11,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,21 +23,25 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.quasar_productions.phoenix.R;
-import com.quasar_productions.phoenix.activities.PostActivityParallax;
 import com.quasar_productions.phoenix.activities.PostActivityPlain;
 import com.quasar_productions.phoenix.adapters.HorizontalLinearRecyclerViewAdapter;
 import com.quasar_productions.phoenix_lib.AppController;
+import com.quasar_productions.phoenix_lib.POJO.ColorScheme;
 import com.quasar_productions.phoenix_lib.POJO.PostsResult;
+import com.quasar_productions.phoenix_lib.POJO.RequestId;
 import com.quasar_productions.phoenix_lib.POJO.parents.Post;
 import com.quasar_productions.phoenix_lib.requests.GetFeaturedPosts;
 
 
 import org.lucasr.twowayview.ItemClickSupport;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReadWriteLock;
 
 import de.greenrobot.event.EventBus;
 
@@ -51,19 +57,18 @@ public class FragmentHome extends Fragment {
     private RecyclerView mRecyclerView;
     HorizontalLinearRecyclerViewAdapter adapter;
     private boolean mSearchCheck;
-    GetFeaturedPosts getFeaturedPosts;
-    private static String Featured_slug="featured";
+
     private int page =1;
-    //SwipeRefreshLayout mSwipeRefreshLayout;
-    long timestamp_id;
-    public FragmentHome newInstance(){
+    private RequestId requestId;
+    public static FragmentHome newInstance(Context context){
         FragmentHome mFragment = new FragmentHome();
-        timestamp_id= SystemClock.elapsedRealtime();
         Bundle bundle= new Bundle();
-        bundle.putLong("timestamp_id",timestamp_id);
+        RequestId requestId1 = new RequestId();
+        GetFeaturedPosts getFeaturedPosts = new GetFeaturedPosts(context,requestId1);
+        bundle.putParcelable(RequestId.KEY_REQUEST_ID, Parcels.wrap(requestId1));
         mFragment.setArguments(bundle);
-        getFeaturedPosts = new GetFeaturedPosts(Featured_slug,timestamp_id);
         return mFragment;
+
     }
 
     @Override
@@ -71,9 +76,10 @@ public class FragmentHome extends Fragment {
                              Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         View rootView = inflater.inflate(R.layout.layout_home, container, false);
-        timestamp_id = getArguments().getLong("timestamp_id");
+        requestId = Parcels.unwrap(getArguments().getParcelable(RequestId.KEY_REQUEST_ID));
         rootView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT ));
         setupRecyclerView(rootView);
+        setRetainInstance(true);
 
        // setupRefreshView(rootView);
         return rootView;
@@ -160,19 +166,31 @@ public class FragmentHome extends Fragment {
     public void onStop() {
         if(EventBus.getDefault().isRegistered(this));
         EventBus.getDefault().unregister(this);
-        AppController.getInstance().getRequestQueue().cancelAll(Featured_slug+timestamp_id);
+        AppController.getInstance().getRequestQueue().cancelAll(requestId);
         super.onStop();
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(EventBus.getDefault().isRegistered(this));
+        EventBus.getDefault().unregister(this);
+    }
+
     // This method will be called when a MessageEvent is posted
    public void onEventAsync(PostsResult event){
 
-       if(event.getCount()>0&&event.getFragment_name().equals(Featured_slug+timestamp_id))
+       if(event.getCount()>0&&event.getRequestId()==requestId)
            adapter.addPosts(event.getPosts());
 
    }
 
+   public void onEvent(VolleyError volleyError){
+       Snackbar.with(getActivity()).text("Unable to Load. Try Again Later.").show(getActivity());
+   }
 
-    private void setupRecyclerView(View view){
+
+    private void setupRecyclerView(View view) {
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
         mRecyclerView.setHasFixedSize(true);
@@ -202,11 +220,13 @@ public class FragmentHome extends Fragment {
                         Snackbar.with(getActivity()).text("Nailed Title").show(getActivity());
                     }
                 });
-                Intent intent=new Intent(getActivity(), PostActivityPlain.class);
+                Intent intent = new Intent(getActivity(), PostActivityPlain.class);
                 Bundle bundle = new Bundle();
-                timestamp_id= SystemClock.elapsedRealtime();
-                bundle.putLong("timestamp_id",timestamp_id);
-                bundle.putString("post_slug",childViewHolder.post.getSlug());
+                RequestId requestId1 = new RequestId();
+                requestId1.generateId(childViewHolder.post.getSlug());
+                bundle.putParcelable(Post.KEY_POST, Parcels.wrap(childViewHolder.post));
+                bundle.putParcelable(RequestId.KEY_REQUEST_ID, Parcels.wrap(requestId1));
+                bundle.putParcelable(ColorScheme.KEY_COLOR_SCHEME,Parcels.wrap(childViewHolder.getColorScheme()));
                 intent.putExtras(bundle);
                 startActivity(intent);
                 getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
@@ -220,7 +240,6 @@ public class FragmentHome extends Fragment {
         });
 
 
-
         itemClick.setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(RecyclerView parent, View child, int position, long id) {
@@ -231,7 +250,7 @@ public class FragmentHome extends Fragment {
                         .animation(true)
                         .actionListener(new ActionClickListener() {
                             @Override
-                            public void onActionClicked() {
+                            public void onActionClicked(Snackbar snackbar) {
                                 Snackbar.with(getActivity()).swipeToDismiss(true).animation(true).text("Undo Clicked").show(getActivity());
                             }
                         })
@@ -240,7 +259,7 @@ public class FragmentHome extends Fragment {
             }
         });
 
-        adapter = new HorizontalLinearRecyclerViewAdapter(getActivity(),new ArrayList<Post>());
+        adapter = new HorizontalLinearRecyclerViewAdapter(getActivity(), new ArrayList<Post>());
         mRecyclerView.setAdapter(adapter);
         //Setting Up Layout Manger
         final LinearLayoutManager mLayoutManager;
@@ -253,7 +272,7 @@ public class FragmentHome extends Fragment {
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int scrollState) {
-                     // updateState(scrollState);
+                // updateState(scrollState);
 
             }
 
@@ -272,7 +291,7 @@ public class FragmentHome extends Fragment {
                 /* Endless Scrolling*/
                 visibleItemCount = mRecyclerView.getChildCount();
                 totalItemCount = mLayoutManager.getItemCount();
-                 firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
+                firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
                 if (loading) {
                     if (totalItemCount > previousTotal) {
@@ -286,33 +305,12 @@ public class FragmentHome extends Fragment {
                     //Your Code Here...
 
                     Log.d("Endless Scroll", "List Finished");
-                    getFeaturedPosts = new  GetFeaturedPosts(Featured_slug,++page,timestamp_id);
+                    GetFeaturedPosts getFeaturedPosts = new GetFeaturedPosts(getActivity().getApplicationContext(), requestId, ++page);
                     loading = true;
 
                 }
-                /**/
             }
 
         });
-
-
-      /*  final Drawable divider = getResources().getDrawable(R.drawable.divider);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(divider));*/
-       // mSwipeRefreshLayout.setRefreshing(true);
     }
-   /* private void setupRefreshView(View view){
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.accent_material_light),getResources().getColor(R.color.accent_material_dark));
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSwipeRefreshLayout.setRefreshing(true);
-                Snackbar.with(getActivity()).animation(true).swipeToDismiss(true).text("Refreshing").show(getActivity());
-                page=0;
-                getFeaturedPosts = new  GetFeaturedPosts(Featured_slug,++page,timestamp_id);
-                adapter.clearPosts();
-            }
-        });
-    }*/
 }

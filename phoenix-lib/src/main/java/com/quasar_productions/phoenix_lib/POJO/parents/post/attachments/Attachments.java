@@ -17,6 +17,7 @@ public class Attachments {
      String caption;
      int parent;
      String mime_type;
+     public static final String KEY_ATTACHMENTS="key_attachments";
      //Images images;
    //  ArrayList<Images> images;
 

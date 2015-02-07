@@ -12,7 +12,7 @@ public class Tags {
      String slug;
      String title;
      String description;
-
+    public static final String KEY_TAGS= "key_tags";
     public Tags(int id, int post_count, String slug, String title, String description) {
 
         this.id = id;

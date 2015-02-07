@@ -1,5 +1,6 @@
 package com.quasar_productions.phoenix_lib.requests;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -7,10 +8,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.pnikosis.materialishprogress.ProgressWheel;
 import com.quasar_productions.phoenix_lib.AppController;
+import com.quasar_productions.phoenix_lib.POJO.RequestId;
 import com.quasar_productions.phoenix_lib.POJO.parents.post.Categories;
-import com.quasar_productions.phoenix_lib.Wave.WaveView;
+import com.quasar_productions.phoenix_lib.Utils.WebConfigBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,41 +26,40 @@ import de.greenrobot.event.EventBus;
  */
 public class GetCategories {
     JsonObjectRequest jsonObjectRequest;
-    WaveView progressWheel;
-    int prog=15;
-    public GetCategories() {
+    Context context;
+    RequestId requestId;
+    public GetCategories(Context context) {
+        this.context = context;
+        requestId = new RequestId();
         AddReq();
     }
 
-    public GetCategories(WaveView progressWheel) {
-        this.progressWheel = progressWheel;
-        AddReq();
-    }
 
-    private void AddReq(){
-        if(progressWheel!=null)
-        progressWheel.setProgress(prog);
-        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                "http://quasar-academy.com/mypreciousapi/get_category_index/", null, new Response.Listener<JSONObject>() {
+    private void AddReq() {
 
-            @Override
-            public void onResponse(JSONObject response) {
-                VolleyLog.d("VOLLEY", "Response: " + response.toString());
-                if (response != null) {
-                    EventBus.getDefault().post(parseJsonFeed(response));
-                    if(progressWheel!=null)progressWheel.setProgress(50);
+        if (!WebConfigBuilder.init(context).getCategoriesURL(0).equals("error")) {
+            jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, WebConfigBuilder.init(context).getCategoriesURL(0)
+                    , null, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+                    VolleyLog.d("VOLLEY", "Response: " + response.toString());
+                    if (response != null) {
+                        EventBus.getDefault().post(parseJsonFeed(response));
+                    }
                 }
+            }, new Response.ErrorListener() {
 
-            }
-        }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d("VOLLEY", "Error: " + error.getMessage());
-            }
-        });
-
-        AppController.getInstance().addToRequestQueue(jsonObjectRequest);
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.d("VOLLEY", "Error: " + error.getMessage());
+                    EventBus.getDefault().post(error);
+                }
+            });
+            AppController.getInstance().addToRequestQueue(jsonObjectRequest,requestId);
+        } else{
+            EventBus.getDefault().post(false);
+        }
     }
 
     private ArrayList<Categories> parseJsonFeed(JSONObject response) {
@@ -78,8 +78,6 @@ public class GetCategories {
                 item.setSlug(feedObj.getString("slug"));
                 array.add(item);
                 Log.d("LOAD DATA", item.getId() + " " + item.getTitle() + " " + item.getDescription());
-                prog=prog+(i*2);
-                if(progressWheel!=null)progressWheel.setProgress(prog);
             }
             return array;
         } catch (JSONException e) {
@@ -87,5 +85,4 @@ public class GetCategories {
         return null;
         }
     }
-
 }

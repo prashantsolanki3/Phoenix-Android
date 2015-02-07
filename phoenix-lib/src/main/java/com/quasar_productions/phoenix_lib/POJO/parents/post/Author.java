@@ -15,6 +15,7 @@ public class Author{
      String nickname;
      String url;
      String description;
+     public static final String KEY_AUTHOR="key_author";
 
     public Author() {
     }

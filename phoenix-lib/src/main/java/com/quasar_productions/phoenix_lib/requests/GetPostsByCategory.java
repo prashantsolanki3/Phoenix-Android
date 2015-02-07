@@ -10,6 +10,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.quasar_productions.phoenix_lib.AppController;
 import com.quasar_productions.phoenix_lib.POJO.PostsResult;
+import com.quasar_productions.phoenix_lib.POJO.RequestId;
 import com.quasar_productions.phoenix_lib.POJO.parents.post.Author;
 import com.quasar_productions.phoenix_lib.POJO.parents.Post;
 
@@ -28,15 +29,15 @@ public class GetPostsByCategory {
     JsonObjectRequest jsonObjectRequest;
     int categoryId;
     long timestamp_id;
-
-    public GetPostsByCategory(final int categoryId,long timestamp_id) {
+    RequestId requestId;
+    public GetPostsByCategory(final int categoryId,RequestId requestId) {
         this.categoryId=categoryId;
-        this.timestamp_id=timestamp_id;
+        this.requestId =requestId;
         FetchResults(categoryId,1);
     }
-    public GetPostsByCategory(final int categoryId,int page,long timestamp_id) {
+    public GetPostsByCategory(final int categoryId,int page,RequestId requestId) {
         this.categoryId=categoryId;
-        this.timestamp_id=timestamp_id;
+        this.requestId=requestId;
         FetchResults(categoryId,page);
     }
 
@@ -57,9 +58,10 @@ public class GetPostsByCategory {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d("VOLLEY", "Error: " + error.getMessage());
+                EventBus.getDefault().post(error);
             }
         });
-        AppController.getInstance().addToRequestQueue(jsonObjectRequest,String.valueOf(categoryId).concat(String.valueOf(timestamp_id)));
+        AppController.getInstance().addToRequestQueue(jsonObjectRequest,requestId);
     }
 
 
@@ -68,7 +70,7 @@ public class GetPostsByCategory {
     private PostsResult parseJsonFeed(JSONObject response) {
         Gson gson=new Gson();
         PostsResult postsResult=gson.fromJson(response.toString(),PostsResult.class);
-        postsResult.setFragment_name(String.valueOf(categoryId).concat(String.valueOf(timestamp_id)));
+        postsResult.setRequestId(requestId);
         return postsResult;
     }
 

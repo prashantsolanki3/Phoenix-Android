@@ -13,7 +13,7 @@ public class Categories{
     String slug;
     String title;
     String description;
-
+    public static final String KEY_CATEGORIES= "key_categories";
     public Categories() {
     }
 

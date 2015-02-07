@@ -1,12 +1,23 @@
 package com.quasar_productions.phoenix_lib.Utils;
 
 import android.content.Context;
+import android.graphics.Point;
+import android.support.v7.graphics.Palette;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
+
+import com.quasar_productions.phoenix_lib.POJO.ColorScheme;
+import com.quasar_productions.phoenix_lib.R;
 
 import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
 
 /**
  * Created by Prashant on 11/17/2014.
@@ -74,4 +85,56 @@ public class Utils {
             return null;
         }
     }
+/*
+
+    public static int getDp(Context context){
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+    }
+*/
+
+    public static Hashtable<String,Hashtable<String,Integer>> paletteToInt(Palette palette){
+        Hashtable<String,Hashtable<String,Integer>> finalInts= new Hashtable<>();
+
+        List<Palette.Swatch> swatches = palette.getSwatches();
+        for (Palette.Swatch swatch:swatches){
+          if(swatch.equals(palette.getDarkMutedSwatch())){
+              finalInts.put(ColorScheme.DARK_MUTED,setValues(swatch));
+            }else if(swatch.equals(palette.getDarkVibrantSwatch())){
+              finalInts.put(ColorScheme.DARK_VIBRANT,setValues(swatch));
+          }else if(swatch.equals(palette.getLightMutedSwatch())){
+              finalInts.put(ColorScheme.LIGHT_MUTED,setValues(swatch));
+          }else if(swatch.equals(palette.getLightVibrantSwatch())){
+              finalInts.put(ColorScheme.LIGHT_VIBRANT,setValues(swatch));
+          }else if(swatch.equals(palette.getMutedSwatch())){
+              finalInts.put(ColorScheme.MUTED,setValues(swatch));
+          }else if(swatch.equals(palette.getVibrantSwatch())) {
+              finalInts.put(ColorScheme.VIBRANT, setValues(swatch));
+          }
+        }
+
+        return finalInts;
+
+    }
+
+   private static Hashtable<String,Integer> setValues(Palette.Swatch swatch){
+       Hashtable<String, Integer> ints = new Hashtable<>();
+       if(swatch!=null) {
+           ints.put(ColorScheme.POPULATION, swatch.getPopulation());
+           ints.put(ColorScheme.BODYTEXTCOLOR, swatch.getBodyTextColor());
+           ints.put(ColorScheme.RGB, swatch.getRgb());
+           ints.put(ColorScheme.TITLETEXTCOLOR, swatch.getTitleTextColor());
+       } else {
+            ints.put(ColorScheme.POPULATION,-1);
+           ints.put(ColorScheme.BODYTEXTCOLOR,-1);
+           ints.put(ColorScheme.RGB,-1);
+           ints.put(ColorScheme.TITLETEXTCOLOR,-1);
+       }
+       return ints;
+   }
+
 }

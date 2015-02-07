@@ -4,14 +4,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.quasar_productions.phoenix.fragments.FirstFragment;
+import com.quasar_productions.phoenix.fragments.CommentFragment;
+import com.quasar_productions.phoenix.fragments.FragmentPostByAuthorList;
+import com.quasar_productions.phoenix.fragments.FragmentPostByCategoryList;
+import com.quasar_productions.phoenix.fragments.PagerFragment;
+import com.quasar_productions.phoenix_lib.POJO.parents.Post;
 
 public class MyPagerAdapter extends FragmentPagerAdapter {
     private static int NUM_ITEMS = 4;
- 
-        public MyPagerAdapter(FragmentManager fragmentManager) {
+        Post post;
+        public MyPagerAdapter(FragmentManager fragmentManager,Post post) {
             super(fragmentManager); 
-        } 
+            this.post=post;
+        }
  
         // Returns total number of pages 
         @Override 
@@ -24,15 +29,15 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
         public Fragment getItem(int position) {
             switch (position) {
             case 0: // Fragment # 0 - This will show FirstFragment 
-                return FirstFragment.newInstance(0, "Comments");
+                return CommentFragment.newInstance(post);
             case 1: // Fragment # 0 - This will show FirstFragment different title 
-                return FirstFragment.newInstance(1, "Related Posts");
+                return PagerFragment.newInstance(1, "Related Posts");
             case 2: // Fragment # 1 - This will show SecondFragment 
-                return FirstFragment.newInstance(2, "Attachments");
+                return FragmentPostByAuthorList.newInstance(post.getAuthor().getId());
             case 3:
-                return FirstFragment.newInstance(3, "Other Features");
+                return PagerFragment.newInstance(3, "Gallery");
             default: 
-                return FirstFragment.newInstance(position,"Some Error Occurred");
+                return PagerFragment.newInstance(position, "Some Error Occurred");
             } 
         } 
  

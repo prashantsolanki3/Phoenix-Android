@@ -51,16 +51,15 @@
         android:layout_marginTop="36dp"
         android:layout_marginRight="56dp"
         android:layout_marginEnd="56dp"
-
         android:layout_gravity="end"
         />
     <com.pnikosis.materialishprogress.ProgressWheel
-        android:id="@+id/progress_wheel"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="center"
-        wheel:matProg_barColor="#5588FF"
-        wheel:matProg_progressIndeterminate="true"/>
+    android:id="@+id/progress_wheel"
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:layout_gravity="center"
+    wheel:matProg_barColor="#5588FF"
+    wheel:matProg_progressIndeterminate="true"/>
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/fab_multiple_actions"
         android:layout_width="wrap_content"

@@ -7,6 +7,7 @@ public class ImgDimen{
     private String url;
     private int width;
     private int height;
+    public static final String KEY_IMG_DIMEN = "key_imgdimen";
 
     public String getUrl() {
         return url;

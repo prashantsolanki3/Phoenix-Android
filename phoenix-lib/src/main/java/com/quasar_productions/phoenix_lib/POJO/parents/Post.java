@@ -18,7 +18,6 @@ import java.util.ArrayList;
 public class Post{
 
     int id;
-    //String fragment_name;
     String type;
     String slug;
     String url;
@@ -39,6 +38,7 @@ public class Post{
     String thumbnail;
     String thumbnail_size;
     Images thumbnail_images;
+    public static final String KEY_POST= "key_post";
 
     public ArrayList<Comments> getComments() {
         return comments;

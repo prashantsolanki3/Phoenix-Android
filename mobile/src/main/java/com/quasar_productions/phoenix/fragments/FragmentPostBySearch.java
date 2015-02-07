@@ -20,6 +20,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.quasar_productions.phoenix.R;
@@ -27,11 +28,14 @@ import com.quasar_productions.phoenix.activities.PostActivityParallax;
 import com.quasar_productions.phoenix.activities.PostActivityPlain;
 import com.quasar_productions.phoenix.adapters.LinearRecyclerViewAdapter;
 import com.quasar_productions.phoenix_lib.AppController;
+import com.quasar_productions.phoenix_lib.POJO.ColorScheme;
 import com.quasar_productions.phoenix_lib.POJO.PostsResult;
+import com.quasar_productions.phoenix_lib.POJO.RequestId;
 import com.quasar_productions.phoenix_lib.POJO.parents.Post;
 import com.quasar_productions.phoenix_lib.requests.GetPostsBySearch;
 
 import org.lucasr.twowayview.ItemClickSupport;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -55,13 +59,13 @@ public class FragmentPostBySearch extends Fragment {
     private int page =1;
     SearchView searchView;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    long timestamp_id;
+    RequestId requestId;
     public FragmentPostBySearch newInstance(String search){
         FragmentPostBySearch mFragment = new FragmentPostBySearch();
         Bundle args = new Bundle();
         args.putString(ARG_SEARCH, search);
-        timestamp_id = SystemClock.elapsedRealtime();
-        args.putLong("timestamp_id",timestamp_id);
+        requestId.generateId(search);
+        args.putParcelable(RequestId.KEY_REQUEST_ID,Parcels.wrap(requestId));
         mFragment.setArguments(args);
         return mFragment;
     }
@@ -73,7 +77,7 @@ public class FragmentPostBySearch extends Fragment {
         View rootView = inflater.inflate(R.layout.layout_recyclerview, container, false);
         rootView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT ));
         search = getArguments().getString(ARG_SEARCH);
-        timestamp_id = getArguments().getLong("timestamp_id");
+        requestId = Parcels.unwrap(getArguments().getParcelable(RequestId.KEY_REQUEST_ID));
 
         setupRecyclerView(rootView);
         setupRefreshView(rootView);
@@ -137,10 +141,10 @@ public class FragmentPostBySearch extends Fragment {
         public boolean onQueryTextSubmit(String s) {
             if (mSearchCheck){
                 if(!s.equals("")){
-                    AppController.getInstance().cancelPendingRequests(search.concat(String.valueOf(timestamp_id)));
+                    AppController.getInstance().cancelPendingRequests(requestId);
                     search = s;
                     page = 0;
-                    getPostsBySearch = new GetPostsBySearch(s, ++page,timestamp_id);
+                    getPostsBySearch = new GetPostsBySearch(s, ++page,requestId);
                     adapter.clearPosts();
                     // implement your search here
                 /*FragmentManager mFragmentManager = getActivity().getSupportFragmentManager();
@@ -172,18 +176,22 @@ public class FragmentPostBySearch extends Fragment {
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
-        AppController.getInstance().cancelPendingRequests(search.concat(String.valueOf(timestamp_id)));
+        AppController.getInstance().cancelPendingRequests(requestId);
         super.onStop();
     }
     // This method will be called when a MessageEvent is posted
    public void onEventMainThread(PostsResult event){
 
-       if(event.getCount()>0&&event.getFragment_name().equals(search.concat(String.valueOf(timestamp_id))))
+       if(event.getCount()>0&&event.getRequestId().equals(requestId));
            adapter.addPosts(event.getPosts());
        if(mSwipeRefreshLayout!=null)
            if(mSwipeRefreshLayout.isRefreshing())
                mSwipeRefreshLayout.setRefreshing(false);
     }
+    public void onEvent(VolleyError volleyError){
+        Snackbar.with(getActivity()).text("Unable to Load. Try Again Later.").show(getActivity());
+    }
+
 
     private void setupRecyclerView(View view){
 
@@ -217,9 +225,9 @@ public class FragmentPostBySearch extends Fragment {
                 });
                 Intent intent=new Intent(getActivity(), PostActivityPlain.class);
                 Bundle bundle = new Bundle();
-                timestamp_id= SystemClock.elapsedRealtime();
-                bundle.putLong("timestamp_id",timestamp_id);
                 bundle.putString("post_slug",childViewHolder.post.getSlug());
+                bundle.putParcelable(Post.KEY_POST, Parcels.wrap(childViewHolder.post));
+                bundle.putParcelable(ColorScheme.KEY_COLOR_SCHEME,Parcels.wrap(childViewHolder.getColorScheme()));
                 intent.putExtras(bundle);
                 startActivity(intent);
                 getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
@@ -244,7 +252,7 @@ public class FragmentPostBySearch extends Fragment {
                         .animation(true)
                         .actionListener(new ActionClickListener() {
                             @Override
-                            public void onActionClicked() {
+                            public void onActionClicked(Snackbar snackbar) {
                                 Snackbar.with(getActivity()).swipeToDismiss(true).animation(true).text("Undo Clicked").show(getActivity());
                             }
                         })
@@ -295,11 +303,10 @@ public class FragmentPostBySearch extends Fragment {
                     //Your Code Here...
 
                     Log.d("Endless Scroll", "List Finished");
-                    getPostsBySearch = new GetPostsBySearch(search,++page);
+                    getPostsBySearch = new GetPostsBySearch(search,++page,requestId);
                     loading = true;
 
                 }
-                /**/
             }
 
         });
@@ -319,7 +326,7 @@ public class FragmentPostBySearch extends Fragment {
                 mSwipeRefreshLayout.setRefreshing(true);
                 Snackbar.with(getActivity()).animation(true).swipeToDismiss(true).text("Refreshing").show(getActivity());
                 page=0;
-                getPostsBySearch = new GetPostsBySearch(search,++page,timestamp_id);
+                getPostsBySearch = new GetPostsBySearch(search,++page,requestId);
                 adapter.clearPosts();
             }
         });

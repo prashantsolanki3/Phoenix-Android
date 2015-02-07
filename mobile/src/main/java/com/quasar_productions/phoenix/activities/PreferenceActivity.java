@@ -13,6 +13,11 @@ import android.view.ViewGroup;
 import android.os.Build;
 
 import com.quasar_productions.phoenix.R;
+import com.quasar_productions.phoenix_lib.POJO.parents.Post;
+import com.quasar_productions.phoenix_lib.Utils.PrefManager;
+
+import java.util.HashMap;
+import java.util.Hashtable;
 
 public class PreferenceActivity extends ActionBarActivity {
 
@@ -61,11 +66,21 @@ public class PreferenceActivity extends ActionBarActivity {
 
         public PlaceholderFragment() {
         }
-
+        HashMap<String,String> websiteConfig;
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+           websiteConfig= PrefManager.Init(getActivity().getApplicationContext()).getWebsiteConfig();
+           PrefManager.Init(getActivity().getApplicationContext()).setWebsiteConfig("","");
             addPreferencesFromResource(R.xml.preference_xml);
+        }
+
+        @Override
+        public void onDestroy() {
+            HashMap<String,String>hashMap=PrefManager.Init(getActivity().getApplicationContext()).getWebsiteConfig();
+            if(hashMap.get(PrefManager.KEY_WEBSITE_URL).equals("")||hashMap.get(PrefManager.KEY_API_ENDPOINT).equals(""))
+            PrefManager.Init(getActivity().getApplicationContext()).setWebsiteConfig(websiteConfig.get(PrefManager.KEY_WEBSITE_URL),websiteConfig.get(PrefManager.KEY_API_ENDPOINT));
+            super.onDestroy();
         }
     }
 }

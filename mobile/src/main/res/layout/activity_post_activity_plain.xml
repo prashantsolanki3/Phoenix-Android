@@ -26,18 +26,6 @@
         android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/header"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:adjustViewBounds="true"
-                />
-        </RelativeLayout>
     </WebView>
 
     <android.support.v7.widget.Toolbar
@@ -63,7 +51,6 @@
         android:layout_marginTop="36dp"
         android:layout_marginRight="56dp"
         android:layout_marginEnd="56dp"
-
         android:layout_gravity="end"
         />
     <com.pnikosis.materialishprogress.ProgressWheel

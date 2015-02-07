@@ -9,7 +9,7 @@ import org.parceler.Parcel;
 public class WebJS {
 
     String javaScript;
-
+    public static String KEY_WEBJS= "key_webJS";
     public WebJS() {
     }
 

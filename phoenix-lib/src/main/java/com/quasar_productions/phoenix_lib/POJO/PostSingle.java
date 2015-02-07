@@ -15,7 +15,15 @@ public class PostSingle {
     private String previous_url;
     private String next_url;
     private String error;
-    private String fragment_name;
+    private RequestId requestId;
+    public static final String KEY_POSTSINGLE = "key_postsingle";
+    public RequestId getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(RequestId requestId) {
+        this.requestId = requestId;
+    }
 
     /**
      * Error Response
@@ -44,13 +52,6 @@ public class PostSingle {
     public PostSingle() {
     }
 
-    public String getFragment_name() {
-        return fragment_name;
-    }
-
-    public void setFragment_name(String fragment_name) {
-        this.fragment_name = fragment_name;
-    }
     public String getStatus() {
         return status;
     }
