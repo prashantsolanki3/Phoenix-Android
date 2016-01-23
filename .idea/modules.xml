@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Phoenix-Android.iml" filepath="$PROJECT_DIR$/Phoenix-Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/mobile/mobile.iml" filepath="$PROJECT_DIR$/mobile/mobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/phoenix-lib/phoenix-lib.iml" filepath="$PROJECT_DIR$/phoenix-lib/phoenix-lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/tv/tv.iml" filepath="$PROJECT_DIR$/tv/tv.iml" />
@@ -9,4 +10,3 @@
     </modules>
   </component>
 </project>
-
